@@ -5,8 +5,6 @@ const Search = () => {
   const [term, setTerm] = useState('')
   const [results, setResults] = useState([])
 
-  // console.log(results)
-
   // will run as component is loaded and whenever the component is re-rendered AND data (term) has changed
   useEffect(() => {
     // useEffect's function cannot directly be marked as async, however there are still three ways to make a request
@@ -18,21 +16,23 @@ const Search = () => {
     // }
     // search();
 
-    if (term) {
-      // Second way is to use IIFE - 😍
-      (async() => {
-        const {data} = await axios.get('https://en.wikipedia.org/w/api.php', {
-          params: {
-            action: 'query',
-            list: 'search',
-            origin: '*',
-            format: 'json',
-            srsearch: term
-          }
-        })
-        setResults(data.query.search)
-      })();
-    }
+    const timeoutId = setTimeout(() => {
+      if (term) {
+        // Second way is to use IIFE - 😍
+        (async() => {
+          const {data} = await axios.get('https://en.wikipedia.org/w/api.php', {
+            params: {
+              action: 'query',
+              list: 'search',
+              origin: '*',
+              format: 'json',
+              srsearch: term
+            }
+          })
+          setResults(data.query.search)
+        })();
+      }
+    },5000)
 
     // Third way is to use promises... ewwwwwwww!
     // axios.get('SOME_WEBSITE.com').then((res) => res.data)
