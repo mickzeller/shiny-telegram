@@ -5,7 +5,7 @@ const Search = () => {
   const [term, setTerm] = useState('')
   const [results, setResults] = useState([])
 
-  console.log(results)
+  // console.log(results)
 
   // will run as component is loaded and whenever the component is re-rendered AND data (term) has changed
   useEffect(() => {
@@ -39,15 +39,22 @@ const Search = () => {
 
   }, [term])
 
-
   const renderedResults = results.map((result) => {
     return (
       <div key={result.pageid} className="item">
+        <div className="right floated content">
+          <a
+            className="ui button"
+            href={`https://en.wikipedia.org?curid=${result.pageid}`}
+          >
+            Go
+          </a>
+        </div>
         <div className="content">
           <div className="header">
             {result.title}
           </div>
-          {result.snippet}
+          <span dangerouslySetInnerHTML={{__html: result.snippet}}/>
         </div>
       </div>
     )
