@@ -16,23 +16,44 @@ const Search = () => {
     // }
     // search();
 
-    const timeoutId = setTimeout(() => {
-      if (term) {
-        // Second way is to use IIFE - 😍
-        (async() => {
-          const {data} = await axios.get('https://en.wikipedia.org/w/api.php', {
-            params: {
-              action: 'query',
-              list: 'search',
-              origin: '*',
-              format: 'json',
-              srsearch: term
-            }
-          })
-          setResults(data.query.search)
-        })();
-      }
-    },5000)
+    if (term && !results.length) {
+      (async() => {
+        const {data} = await axios.get('https://en.wikipedia.org/w/api.php', {
+          params: {
+            action: 'query',
+            list: 'search',
+            origin: '*',
+            format: 'json',
+            srsearch: term
+          }
+        })
+        setResults(data.query.search)
+      })();
+    } else {
+      const timeoutId = setTimeout(() => {
+        if (term) {
+          // Second way is to use IIFE - 😍
+          (async() => {
+            const {data} = await axios.get('https://en.wikipedia.org/w/api.php', {
+              params: {
+                action: 'query',
+                list: 'search',
+                origin: '*',
+                format: 'json',
+                srsearch: term
+              }
+            })
+            setResults(data.query.search)
+          })();
+        }
+
+        // cleanup function
+        return () => {
+          clearTimeout(timeoutId)
+        }
+
+      }, 1000)
+    }
 
     // Third way is to use promises... ewwwwwwww!
     // axios.get('SOME_WEBSITE.com').then((res) => res.data)
