@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const Search = () => {
-  const [term, setTerm] = useState('programming')
+  const [term, setTerm] = useState('')
   const [debouncedTerm, setDebouncedTerm] = useState(term)
   const [results, setResults] = useState([])
 
@@ -29,7 +29,9 @@ const Search = () => {
           srsearch: debouncedTerm
         }
       });
-      setResults(data.query.search)
+      if (debouncedTerm) {
+        setResults(data.query.search)
+      }
     })();
   }, [debouncedTerm])
 
